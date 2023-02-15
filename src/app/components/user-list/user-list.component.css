@@ -1,0 +1,23 @@
+.user-card{
+    background-color: #d9eff3;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-size: large;
+    width: 500px;
+    padding: 5px;
+    cursor: pointer;
+    padding: 20px;
+}
+
+.user-card:hover {
+    background-color: bisque;
+}
+
+.add-new-user-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.username {
+    font-size: x-large;
+}

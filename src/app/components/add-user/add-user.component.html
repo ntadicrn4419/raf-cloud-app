@@ -1,0 +1,8 @@
+<div *ngIf="authorised; else noPermission">
+  <h3>Add new user</h3>
+  <app-user-form (formValue)="addUser($event)"></app-user-form>
+</div>
+
+<ng-template #noPermission>
+  <h3>You have no permission to add user.</h3>
+</ng-template>

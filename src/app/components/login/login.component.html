@@ -1,0 +1,28 @@
+<div class="login-form">
+  <form class="row g-3" [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <input
+        class="form-control"
+        [ngClass]="{ invalid: email.invalid && email.touched }"
+        type="email"
+        placeholder="Enter email"
+        formControlName="email"
+      />
+      <div *ngIf="email.invalid && email.touched" class="invalid-email-text">
+        *Email is not valid.
+      </div>
+    </div>
+    <div>
+      <input
+        class="form-control"
+        [ngClass]="{ invalid: password.invalid && password.touched }"
+        type="password"
+        placeholder="Enter password"
+        formControlName="password"
+      />
+    </div>
+    <div>
+      <button class="confirm-btn" type="submit">Sign in</button>
+    </div>
+  </form>
+</div>

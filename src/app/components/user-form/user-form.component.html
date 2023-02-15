@@ -1,0 +1,61 @@
+<div>
+  <form [formGroup]="userForm" class="user-form">
+    <div>
+      <label for="firstname" class="form-label">Firstname</label>
+      <input
+        class="form-control"
+        id="firstname"
+        formControlName="firstname"
+        [ngClass]="{ invalid: firstname.invalid && firstname.touched }"
+      />
+      <p *ngIf="firstname.invalid && firstname.touched" class="invalid-text">
+        *Firstname is required.
+      </p>
+    </div>
+    <div>
+      <label for="lastname" class="form-label">Lastname</label>
+      <input
+        class="form-control"
+        id="lastname"
+        formControlName="lastname"
+        [ngClass]="{ invalid: lastname.invalid && lastname.touched }"
+      />
+      <p *ngIf="lastname.invalid && lastname.touched" class="invalid-text">
+        *Lastname is required.
+      </p>
+    </div>
+    <div>
+      <label for="email" class="form-label">Email</label>
+      <input
+        class="form-control"
+        type="email"
+        id="email"
+        formControlName="email"
+        [ngClass]="{ invalid: email.invalid && email.touched }"
+      />
+      <p class="email-disable" *ngIf="disableEmailChange">*Email can not be changed.</p>
+      <p *ngIf="email.invalid && email.touched" class="invalid-text">
+        *Email is not valid.
+      </p>
+    </div>
+    <div>
+      <label for="password" class="form-label">Password</label>
+      <input
+        class="form-control"
+        type="password"
+        id="password"
+        formControlName="password"
+        [ngClass]="{ invalid: password.invalid && password.touched }"
+      />
+      <p *ngIf="password.invalid && password.touched" class="invalid-text">
+        *Password is required.
+      </p>
+    </div>
+    <div>
+      <app-permissions
+        (changeValue)="refreshPermissionList($event)"
+      ></app-permissions>
+    </div>
+    <button class="confirm-btn save-btn" (click)="saveUser()">Save user</button>
+  </form>
+</div>

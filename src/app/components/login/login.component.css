@@ -1,0 +1,13 @@
+.login-form {
+    width: max-content;
+}
+
+.invalid-email-text {
+    color: red;
+    font-style: italic;
+}
+
+.invalid {
+    border: 1px solid red;
+}
+

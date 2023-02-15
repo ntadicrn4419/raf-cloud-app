@@ -1,0 +1,43 @@
+<div class="form-group choose-permissions" [formGroup]="permissionsForm">
+  <h5>Permissions:</h5>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      [value]="CAN_READ"
+      id="canRead"
+      formControlName="permissions"
+    />
+    <label class="form-check-label" for="canRead"> {{ CAN_READ }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      [value]="CAN_CREATE"
+      id="canCreate"
+      formControlName="permissions"
+    />
+    <label class="form-check-label" for="canCreate"> {{ CAN_CREATE }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      [value]="CAN_UPDATE"
+      id="canUpdate"
+      formControlName="permissions"
+    />
+    <label class="form-check-label" for="canUpdate"> {{ CAN_UPDATE }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      [value]="CAN_DELETE"
+      id="canDelete"
+      formControlName="permissions"
+    />
+    <label class="form-check-label" for="canDelete"> {{ CAN_DELETE }} </label>
+  </div>
+</div>

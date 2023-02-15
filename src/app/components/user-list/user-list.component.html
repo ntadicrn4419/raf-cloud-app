@@ -1,0 +1,18 @@
+<div *ngIf="authorised; else noPermission">
+  <button class="confirm-btn add-new-user-btn" (click)="goToAddNewUserPage()">
+    Add new user
+  </button>
+  <br><br>
+  <div *ngFor="let user of users">
+    <div class="user-card" (click)="routeTo(user.email)">
+      <p class="username"><i class="user"></i> {{ user.firstname }} {{ user.lastname }}</p>
+      <p>Email: {{ user.email }}</p>
+      <p>Permissions: {{ user.permissionList | permission}}</p>
+    </div>
+    <br />
+  </div>
+</div>
+
+<ng-template #noPermission>
+  <h3>You have no permission.</h3>
+</ng-template>

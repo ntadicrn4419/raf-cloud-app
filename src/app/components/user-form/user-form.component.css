@@ -1,0 +1,20 @@
+.invalid {
+    border: 1px solid red;
+}
+
+.invalid-text {
+    color: red;
+    font-style: italic;
+}
+
+.save-btn {
+    margin-bottom: 20px;
+}
+
+.email-disable {
+    font-style: italic;
+}
+
+.user-form {
+    max-width: 500px;
+}
