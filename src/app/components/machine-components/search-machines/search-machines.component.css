@@ -1,0 +1,13 @@
+.filter-parameters {
+    max-width: 300px;
+}
+
+.param {
+    padding-bottom: 10px;
+}
+
+.my-datepicker {
+    margin: 10px;
+    border-radius: 5px;
+    padding-left: 5px;
+}

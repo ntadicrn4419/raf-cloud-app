@@ -1,1 +1,39 @@
-<p>search-machines works!</p>
+<div class="filter-parameters" [formGroup]="searchFilters">
+  <h5>Filters</h5>
+  <div class="param">
+    <label for="search">Machine name:</label>
+    <input
+      id="search"
+      type="search"
+      class="form-control"
+      placeholder="Search machines by name"
+      formControlName="machineName"
+    />
+  </div>
+  <div class="form-group param">
+    <label for="dropdown">Machine status:</label>
+    <!-- <select class="form-control" id="dropdown" (change)="onSelect($event)"> -->
+    <select class="form-control" id="dropdown" formControlName="machineStatus">
+      <option value="">Select machine status</option>
+      <option value="RUNNING">RUNNING</option>
+      <option value="STOPPED">STOPPED</option>
+    </select>
+  </div>
+  <div class="param">
+    <label for="datepicker-start-date">Select start date:</label>
+    <input
+      class="my-datepicker"
+      type="date"
+      id="datepicker-start-date"
+      formControlName="startDate"
+    />
+    <label for="datepicker-start-date">Select end date:</label>
+    <input
+      class="my-datepicker"
+      type="date"
+      id="datepicker-end-date"
+      formControlName="endDate"
+    />
+  </div>
+  <button class="confirm-btn" (click)="searchMachines()">Search</button>
+</div>

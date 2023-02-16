@@ -60,6 +60,7 @@ export class PermissionsComponent implements OnInit {
         ...userManagementPermissionList,
         ...machineManagementPermissionList,
       ];
+      console.log(permissionList);
       this.changeValue.emit(permissionList);
     });
   }
@@ -100,15 +101,15 @@ export class PermissionsComponent implements OnInit {
     const can_search_machines =
       this.permissionsForm.get('canSearchMachines')?.value;
     const can_start_machines =
-      this.permissionsForm.get('canSearchMachines')?.value;
+      this.permissionsForm.get('canStartMachines')?.value;
     const can_stop_machines =
-      this.permissionsForm.get('canSearchMachines')?.value;
+      this.permissionsForm.get('canStopMachines')?.value;
     const can_restart_machines =
-      this.permissionsForm.get('canSearchMachines')?.value;
+      this.permissionsForm.get('canRestartMachines')?.value;
     const can_create_machines =
-      this.permissionsForm.get('canSearchMachines')?.value;
+      this.permissionsForm.get('canCreateMachines')?.value;
     const can_destroy_machines =
-      this.permissionsForm.get('canSearchMachines')?.value;
+      this.permissionsForm.get('canDestroyMachines')?.value;
 
     if (can_search_machines) {
       resultList.push(Permission.CAN_SEARCH_MACHINES);

@@ -35,10 +35,17 @@ import { UserCardComponent } from './components/user-components/user-card/user-c
     CreateMachineComponent,
     ErrorsHistoryComponent,
     UserPermissionsComponent,
-    UserCardComponent
+    UserCardComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+  ],
   providers: [httpInterceptorProviders],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
