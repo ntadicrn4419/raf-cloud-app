@@ -19,6 +19,9 @@ export class SingleUserComponent implements OnInit, OnDestroy {
   email: string = '';
   password: string = '';
   permissionList: Permission[] = [];
+
+  userManagementPermissions: Permission[] = [];
+  machineManagementPermissions: Permission[] = [];
   
   authorisedToDelete: boolean = false;
   authorisedToUpdate: boolean = false;

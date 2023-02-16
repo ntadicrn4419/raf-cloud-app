@@ -1,0 +1,9 @@
+<div *ngIf="user" class="user-card" [ngClass]="hover ? 'hover-class' : 'pointer-class'">
+  <p class="username">
+    <i class="user"></i> {{ user.firstname }} {{ user.lastname }}
+  </p>
+  <p>Email: {{ user.email }}</p>
+  <app-user-permissions
+    [permissionList]="user.permissionList"
+  ></app-user-permissions>
+</div>

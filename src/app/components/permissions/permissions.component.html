@@ -1,12 +1,12 @@
 <div class="form-group choose-permissions" [formGroup]="permissionsForm">
-  <h5>Permissions:</h5>
+  <h5>User Management Permissions:</h5>
   <div class="form-check">
     <input
       class="form-check-input"
       type="radio"
       [value]="CAN_READ"
       id="canRead"
-      formControlName="permissions"
+      formControlName="userManagementPermissions"
     />
     <label class="form-check-label" for="canRead"> {{ CAN_READ }} </label>
   </div>
@@ -16,7 +16,7 @@
       type="radio"
       [value]="CAN_CREATE"
       id="canCreate"
-      formControlName="permissions"
+      formControlName="userManagementPermissions"
     />
     <label class="form-check-label" for="canCreate"> {{ CAN_CREATE }} </label>
   </div>
@@ -26,7 +26,7 @@
       type="radio"
       [value]="CAN_UPDATE"
       id="canUpdate"
-      formControlName="permissions"
+      formControlName="userManagementPermissions"
     />
     <label class="form-check-label" for="canUpdate"> {{ CAN_UPDATE }} </label>
   </div>
@@ -36,8 +36,70 @@
       type="radio"
       [value]="CAN_DELETE"
       id="canDelete"
-      formControlName="permissions"
+      formControlName="userManagementPermissions"
     />
     <label class="form-check-label" for="canDelete"> {{ CAN_DELETE }} </label>
+  </div>
+ <hr>
+  <h5>Machine Management Permissions:</h5>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_SEARCH"
+      id="canSearch"
+      formControlName="canSearchMachines"
+    />
+    <label class="form-check-label" for="canSearch"> {{ CAN_SEARCH }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_START"
+      id="canStart"
+      formControlName="canStartMachines"
+    />
+    <label class="form-check-label" for="canStart"> {{ CAN_START }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_STOP"
+      id="canStop"
+      formControlName="canStopMachines"
+    />
+    <label class="form-check-label" for="canStop"> {{ CAN_STOP }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_RESTART"
+      id="canRestart"
+      formControlName="canRestartMachines"
+    />
+    <label class="form-check-label" for="canRestart"> {{ CAN_RESTART }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_CREATE_M"
+      id="canCreateM"
+      formControlName="canCreateMachines"
+    />
+    <label class="form-check-label" for="canSearch"> {{ CAN_CREATE_M }} </label>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [value]="CAN_DESTROY"
+      id="canDestroy"
+      formControlName="canDestroyMachines"
+    />
+    <label class="form-check-label" for="canSearch"> {{ CAN_DESTROY }} </label>
   </div>
 </div>

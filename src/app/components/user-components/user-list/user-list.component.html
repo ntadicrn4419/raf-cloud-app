@@ -2,12 +2,10 @@
   <button class="confirm-btn add-new-user-btn" (click)="goToAddNewUserPage()">
     Add new user
   </button>
-  <br><br>
+  <br /><br />
   <div *ngFor="let user of users">
-    <div class="user-card" (click)="routeTo(user.email)">
-      <p class="username"><i class="user"></i> {{ user.firstname }} {{ user.lastname }}</p>
-      <p>Email: {{ user.email }}</p>
-      <p>Permissions: {{ user.permissionList | permission}}</p>
+    <div (click)="routeTo(user.email)">
+      <app-user-card [user]="user" [hover]="true"></app-user-card>
     </div>
     <br />
   </div>

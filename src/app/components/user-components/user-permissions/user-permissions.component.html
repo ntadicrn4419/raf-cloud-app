@@ -1,0 +1,18 @@
+<div>
+  <h5>User Management Permissions:</h5>
+  <ol>
+    <ng-container *ngFor="let p of permissionList">
+      <li *ngIf="p.toString().indexOf('USERS') !== -1" class="permission-text">
+        {{ p | permission }}
+      </li>
+    </ng-container>
+  </ol>
+  <h5>Machine Management Permissions:</h5>
+  <ol>
+    <ng-container *ngFor="let p of permissionList">
+      <li *ngIf="p.toString().indexOf('MACHINES') !== -1" class="permission-text">
+        {{ p | permission }}
+      </li>
+    </ng-container>
+  </ol>
+</div>
