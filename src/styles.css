@@ -20,8 +20,33 @@
   margin-right: 15px;
 }
 
+.check {
+  background-image: url("images/check.svg");
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  background-repeat: no-repeat;
+}
+
+.stop {
+  background-image: url("images/stop.svg");
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  background-repeat: no-repeat;
+}
+
 .confirm-btn {
   background-color: #18798d;
+  color: #ffffff;
+  border: none;
+  min-width: 100px;
+  border-radius: 5px;
+  padding: 5px 5px;
+}
+
+.delete-btn {
+  background-color: #c74342;
   color: #ffffff;
   border: none;
   min-width: 100px;

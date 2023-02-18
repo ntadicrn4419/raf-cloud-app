@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Permission, User } from '../models';
+import { Machine, Permission, User } from '../models';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -16,6 +16,9 @@ export class ApiService implements OnDestroy {
 
   private _users = new BehaviorSubject<User[]>([]);
   users$ = this._users.asObservable();
+
+  private _userMachines = new BehaviorSubject<Machine[]>([]);
+  userMachines$ = this._userMachines.asObservable();
 
   constructor(private httpClient: HttpClient, private router: Router) {}
 
@@ -50,33 +53,6 @@ export class ApiService implements OnDestroy {
         this.router.navigate(['/users']);
       });
   }
-
-  // getAllUsers() {
-  //   return this.httpClient
-  //     .get<any>(`${this.apiUrl}/api/users`)
-  //     .pipe(
-  //       catchError((error) => {
-  //         if (error.status === 403) {
-  //           return of({
-  //             failed: true,
-  //             message: 'Your session has expired. Please sign in again.',
-  //           });
-  //         } else {
-  //           return of({
-  //             failed: true,
-  //             message: 'An unexpected error occured. Please try to sign out and sign in again.',
-  //           });
-  //         }
-  //       })
-  //     )
-  //     .subscribe((response) => {
-  //       if(response.failed) {
-  //         alert(response.message);
-  //         return;
-  //       }
-  //       this._users.next(response.users);
-  //     });
-  // }
 
   getAllUsers() {
     return this.httpClient
@@ -131,6 +107,45 @@ export class ApiService implements OnDestroy {
     return this.httpClient.post<any>(`${this.apiUrl}/api/users/delete`, {
       email,
     });
+  }
+
+  getUserMachines() {
+    return this.httpClient
+      .get<any>(`${this.apiUrl}/api/machines`)
+      .subscribe((response) => {
+        console.log(response);
+        this._userMachines.next(response.machines);
+      });
+  }
+
+  createMachine(
+    name: string
+  ) {
+    return this.httpClient
+      .post<any>(`${this.apiUrl}/api/machines/add`, {
+       name
+      })
+      .subscribe((response) => {
+        this._userMachines.next(response.machines);
+        this.router.navigate(['/search-machines']);
+      });
+  }
+
+  destroyMachine(machine: Machine) {
+    return this.httpClient
+      .post<any>(`${this.apiUrl}/api/machines/delete`, {
+       id: machine.id,
+       status: machine.status,
+       user: machine.user,
+       active: machine.active,
+       runningPeriods: machine.runningPeriods,
+       name: machine.name,
+      })
+      .subscribe((response) =>{
+        let um = this._userMachines.getValue();
+        um = um.filter(m => m.id !== machine.id);
+        this._userMachines.next(um);
+      });
   }
 
   ngOnDestroy(): void {

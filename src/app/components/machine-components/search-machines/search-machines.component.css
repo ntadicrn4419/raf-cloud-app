@@ -1,13 +1,66 @@
 .filter-parameters {
-    max-width: 300px;
+  max-width: 300px;
 }
 
 .param {
-    padding-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .my-datepicker {
-    margin: 10px;
-    border-radius: 5px;
-    padding-left: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  padding-left: 5px;
+}
+
+input[type="date"]:invalid {
+  color: transparent;
+}
+
+.my-dropdown-select {
+  background: url("src/images/dropdown-arrow.svg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  padding-right: 20px;
+}
+
+.machine-card {
+  background-color: #d9eff3;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-size: large;
+  width: 500px;
+  padding: 5px;
+  cursor: default;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.status {
+  text-align: center;
+}
+.status-text {
+  display: flex;
+  align-items: center;
+}
+
+i {
+  margin-left: 10px;
+}
+
+.data-table {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.data-column {
+  width: 48%;
+  padding: 10px;
+  margin: 10px;
+}
+
+.warning {
+  font-size: medium;
+  font-style: italic;
 }

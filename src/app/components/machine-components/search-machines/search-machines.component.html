@@ -1,39 +1,84 @@
-<div class="filter-parameters" [formGroup]="searchFilters">
-  <h5>Filters</h5>
-  <div class="param">
-    <label for="search">Machine name:</label>
-    <input
-      id="search"
-      type="search"
-      class="form-control"
-      placeholder="Search machines by name"
-      formControlName="machineName"
-    />
+<div class="data-table">
+  <div class="data-column filter-parameters" [formGroup]="searchFilters">
+    <h5>Filters</h5>
+    <div class="param">
+      <label for="search">Machine name:</label>
+      <input
+        id="search"
+        type="search"
+        class="form-control"
+        placeholder="Search machines by name"
+        formControlName="machineName"
+      />
+    </div>
+    <div class="form-group param">
+      <label for="dropdown">Machine status:</label>
+      <select
+        class="form-control"
+        id="dropdown"
+        formControlName="machineStatus"
+      >
+        <option value="">Select machine status</option>
+        <option value="RUNNING">RUNNING</option>
+        <option value="STOPPED">STOPPED</option>
+      </select>
+    </div>
+    <div class="param">
+      <label for="datepicker-start-date">Select start date:</label>
+      <input
+        required="true"
+        class="my-datepicker"
+        type="date"
+        id="datepicker-start-date"
+        formControlName="startDate"
+      />
+      <label for="datepicker-start-date">Select end date:</label>
+      <input
+        required="true"
+        class="my-datepicker"
+        type="date"
+        id="datepicker-end-date"
+        formControlName="endDate"
+      />
+    </div>
+    <button class="confirm-btn" (click)="searchMachines()">Search</button>
   </div>
-  <div class="form-group param">
-    <label for="dropdown">Machine status:</label>
-    <!-- <select class="form-control" id="dropdown" (change)="onSelect($event)"> -->
-    <select class="form-control" id="dropdown" formControlName="machineStatus">
-      <option value="">Select machine status</option>
-      <option value="RUNNING">RUNNING</option>
-      <option value="STOPPED">STOPPED</option>
-    </select>
+
+  <div class="data-column">
+    <ng-container *ngFor="let machine of filteredMachines">
+      <div *ngIf="machine.active" class="machine-card">
+        <p>Name: {{ machine.name }}</p>
+        <div class="status">
+          <p class="status-text">
+            Status: {{ machine.status }}
+            <i
+              [ngClass]="
+                machine.status.toString() === 'RUNNING' ? 'check' : 'stop'
+              "
+            ></i>
+          </p>
+        </div>
+        <p>Running period:</p>
+        <div *ngFor="let period of machine.runningPeriods">
+          <p
+            *ngIf="
+              period.dateStarted && period.dateStopped;
+              else runningPeriodTemplate
+            "
+          >
+            {{ period.dateStarted | date }} - {{ period.dateStopped | date }}
+          </p>
+          <ng-template #runningPeriodTemplate>
+            <p *ngIf="period.dateStarted">
+              {{ period.dateStarted | date }} - still running
+            </p>
+          </ng-template>
+        </div>
+        <div *ngIf="authorisedToDelete">
+          <button class="delete-btn" (click)="destroyMachine(machine)">Destroy</button>
+          <p class="warning">*This action is irreversible.</p>
+        </div>
+      </div>
+    </ng-container>
   </div>
-  <div class="param">
-    <label for="datepicker-start-date">Select start date:</label>
-    <input
-      class="my-datepicker"
-      type="date"
-      id="datepicker-start-date"
-      formControlName="startDate"
-    />
-    <label for="datepicker-start-date">Select end date:</label>
-    <input
-      class="my-datepicker"
-      type="date"
-      id="datepicker-end-date"
-      formControlName="endDate"
-    />
-  </div>
-  <button class="confirm-btn" (click)="searchMachines()">Search</button>
 </div>

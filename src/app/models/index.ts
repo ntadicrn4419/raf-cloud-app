@@ -19,3 +19,23 @@ export enum Permission {
   CAN_CREATE_MACHINES = 8,
   CAN_DESTROY_MACHINES = 9,
 }
+
+export interface Machine {
+  id: number;
+  status: MachineStatus;
+  user: User;
+  active: boolean;
+  name: string;
+  runningPeriods: MachineRunningPeriod[];
+}
+
+export enum MachineStatus {
+  RUNNING = 0,
+  STOPPED = 1,
+}
+
+export interface MachineRunningPeriod {
+  id: number;
+  dateStarted: Date;
+  dateStopped: Date;
+}

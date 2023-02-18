@@ -1,1 +1,15 @@
-<p>create-machine works!</p>
+<div *ngIf="authorised; else denied" class="machine-form">
+  <h5>Create new machine:</h5>
+  <input
+    class="form-control"
+    type="text"
+    [formControl]="name"
+    placeholder="Enter name"
+  />
+  <br>
+  <button class="confirm-btn" (click)="createMachine()">Create machine</button>
+</div>
+
+<ng-template #denied>
+    <h3>You have no permission to create machine.</h3>
+</ng-template>
