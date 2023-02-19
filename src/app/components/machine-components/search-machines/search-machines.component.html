@@ -39,7 +39,7 @@
         type="time"
         formControlName="startRunningTime"
       />
-  
+
       <label for="datepicker-stop-running-date">Stop date & time:</label>
       <input
         required="true"
@@ -71,7 +71,7 @@
         type="time"
         formControlName="startCreatedTime"
       />
-  
+
       <label for="datepicker-stop-created-date">Stop date & time:</label>
       <input
         required="true"
@@ -94,7 +94,9 @@
     <ng-container *ngFor="let machine of filteredMachines">
       <div *ngIf="machine.active" class="machine-card">
         <p>Name: {{ machine.name }}</p>
-        <p>Created at: {{ machine.createdAt | date:'dd.MM.yyyy \'at\' hh:mm a'}}</p>
+        <p>
+          Created at: {{ machine.createdAt | date : "dd.MM.yyyy 'at' hh:mm a" }}
+        </p>
         <div class="status">
           <p class="status-text">
             Status: {{ machine.status }}
@@ -105,6 +107,45 @@
             ></i>
           </p>
         </div>
+        <div>
+          Schedule operation or do it now:<br>
+          <button
+            *ngIf="authorisedToStart && machine.status.toString() === 'STOPPED'"
+            class="confirm-btn"
+            (click)="startMachine(machine.id)"
+          >
+            Start
+          </button>
+          <button
+            *ngIf="authorisedToStop && machine.status.toString() === 'RUNNING'"
+            class="confirm-btn"
+            (click)="stopMachine(machine.id)"
+          >
+            Stop
+          </button>
+          <button
+            *ngIf="
+              authorisedToRestart && machine.status.toString() === 'RUNNING'
+            "
+            class="confirm-btn"
+            (click)="restartMachine(machine.id)"
+          >
+            Restart
+          </button>
+          <input
+            required="true"
+            class="my-datepicker"
+            type="date"
+            id="schedule-operation-date"
+            [formControl]="scheduleOperationDate"
+          />
+          <input
+            required="true"
+            class="my-datepicker"
+            type="time"
+            [formControl]="scheduleOperationTime"
+          />
+        </div>
         <p>Running period:</p>
         <div *ngFor="let period of machine.runningPeriods">
           <p
@@ -113,11 +154,13 @@
               else runningPeriodTemplate
             "
           >
-            {{ period.dateStarted | date:'dd.MM.yyyy \'at\' hh:mm a' }} - {{ period.dateStopped | date:'dd.MM.yyyy \'at\' hh:mm a' }}
+            {{ period.dateStarted | date : "dd.MM.yyyy 'at' hh:mm a" }} -
+            {{ period.dateStopped | date : "dd.MM.yyyy 'at' hh:mm a" }}
           </p>
           <ng-template #runningPeriodTemplate>
             <p *ngIf="period.dateStarted">
-              {{ period.dateStarted | date:'dd.MM.yyyy \'at\' hh:mm a' }} - still running
+              {{ period.dateStarted | date : "dd.MM.yyyy 'at' hh:mm a" }} -
+              still running
             </p>
           </ng-template>
         </div>
@@ -135,5 +178,5 @@
 </div>
 
 <ng-template #noPermission>
-<h3>You have no permission to search machines.</h3>
+  <h3>You have no permission to search machines.</h3>
 </ng-template>

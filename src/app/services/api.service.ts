@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class ApiService implements OnDestroy {
+  
   private readonly apiUrl = environment.apiUrl;
 
   private _signedInUserEmail = new BehaviorSubject<string>('');
@@ -131,15 +132,7 @@ export class ApiService implements OnDestroy {
 
   destroyMachine(machine: Machine) {
     return this.httpClient
-      .post<any>(`${this.apiUrl}/api/machines/delete`, {
-        id: machine.id,
-        status: machine.status,
-        user: machine.user,
-        active: machine.active,
-        runningPeriods: machine.runningPeriods,
-        name: machine.name,
-        createdAt: machine.createdAt,
-      })
+      .post<any>(`${this.apiUrl}/api/machines/delete/${machine.id}`, {})
       .subscribe((response) => {
         let um = this._userMachines.getValue();
         um = um.filter((m) => m.id !== machine.id);
@@ -153,7 +146,7 @@ export class ApiService implements OnDestroy {
     runningDatetimeStarted: number | null,
     runningDatetimeStopped: number | null,
     createdDatetimeStarted: number | null,
-    createdDatetimeStopped: number | null,
+    createdDatetimeStopped: number | null
   ) {
     return this.httpClient.post<any>(
       `${this.apiUrl}/api/machines/search-by-filters`,
@@ -166,6 +159,41 @@ export class ApiService implements OnDestroy {
         createdAtUpperBound: createdDatetimeStopped,
       }
     );
+  }
+
+  restartMachine(id: number) {
+    return this.httpClient
+      .put<any>(`${this.apiUrl}/api/machines/restart/${id}`, {});
+  }
+  stopMachine(id: number) {
+    return this.httpClient
+      .put<any>(`${this.apiUrl}/api/machines/stop/${id}`, {});
+  }
+  startMachine(id: number) {
+    return this.httpClient
+      .put<any>(`${this.apiUrl}/api/machines/start/${id}`, {});
+  }
+
+  scheduleMachineRestart(id: number, datetime: any) {
+    return this.httpClient
+      .post<any>(`${this.apiUrl}/api/machines/schedule-restart`, {
+        id: id,
+        datetime: datetime,
+      });
+  }
+  scheduleMachineStop(id: number, datetime: any) {
+    return this.httpClient
+      .post<any>(`${this.apiUrl}/api/machines/schedule-stop`, {
+        id: id,
+        datetime: datetime,
+      });
+  }
+  scheduleMachineStart(id: number, datetime: any) {
+    return this.httpClient
+      .post<any>(`${this.apiUrl}/api/machines/schedule-start`, {
+        id: id,
+        datetime: datetime,
+      });
   }
 
   ngOnDestroy(): void {

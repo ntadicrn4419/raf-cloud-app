@@ -1,6 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { Machine, MachineStatus, Permission } from 'src/app/models';
 import { ApiService } from 'src/app/services/api.service';
 import { MyAuthService } from 'src/app/services/my-auth.service';
@@ -18,6 +19,9 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
   authorisedToSearch: boolean = false;
   authorisedToDelete: boolean = false;
+  authorisedToStop: boolean = false;
+  authorisedToStart: boolean = false;
+  authorisedToRestart: boolean = false;
 
   searchFilters = new FormGroup({
     machineName: new FormControl(''),
@@ -31,6 +35,9 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
     startCreatedTime: new FormControl('00:00'),
     stopCreatedTime: new FormControl('00:00'),
   });
+
+  scheduleOperationDate = new FormControl('');
+  scheduleOperationTime = new FormControl('');
 
   get machineName() {
     return this.searchFilters.get('machineName')!;
@@ -71,19 +78,31 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
     let startRunningDateWithTimeAsLong: number | null = null;
     let stopRunningDateWithTimeAsLong: number | null = null;
 
-    if(this.startRunningDate.value && this.stopRunningDate.value) {
-      startRunningDateWithTimeAsLong = this.formatDateTimeToLong(this.startRunningDate.value, this.startRunningTime.value);
-      stopRunningDateWithTimeAsLong = this.formatDateTimeToLong(this.stopRunningDate.value, this.stopRunningTime.value);
+    if (this.startRunningDate.value && this.stopRunningDate.value) {
+      startRunningDateWithTimeAsLong = this.formatDateTimeToLong(
+        this.startRunningDate.value,
+        this.startRunningTime.value
+      );
+      stopRunningDateWithTimeAsLong = this.formatDateTimeToLong(
+        this.stopRunningDate.value,
+        this.stopRunningTime.value
+      );
     }
 
     let startCreatedDateWithTimeAsLong: number | null = null;
     let stopCreatedDateWithTimeAsLong: number | null = null;
 
-    if(this.startCreatedDate.value && this.stopCreatedDate.value) {
-      startCreatedDateWithTimeAsLong = this.formatDateTimeToLong(this.startCreatedDate.value, this.startCreatedTime.value);
-      stopCreatedDateWithTimeAsLong = this.formatDateTimeToLong(this.stopCreatedDate.value, this.stopCreatedTime.value);
+    if (this.startCreatedDate.value && this.stopCreatedDate.value) {
+      startCreatedDateWithTimeAsLong = this.formatDateTimeToLong(
+        this.startCreatedDate.value,
+        this.startCreatedTime.value
+      );
+      stopCreatedDateWithTimeAsLong = this.formatDateTimeToLong(
+        this.stopCreatedDate.value,
+        this.stopCreatedTime.value
+      );
     }
-    
+
     this.apiService
       .searchMachinesByFilters(
         this.machineName.value,
@@ -107,6 +126,89 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
       this.apiService.destroyMachine(machine);
     }
   }
+
+  startMachine(id: number) {
+    if (
+      this.scheduleOperationDate.value! &&
+      this.scheduleOperationTime.value!
+    ) {
+      const datetime = this.formatDateTimeToLong(
+        this.scheduleOperationDate.value,
+        this.scheduleOperationTime.value
+      );
+      this.apiService.scheduleMachineStart(id, datetime).subscribe(() => {
+        alert(`Success. Machine will start at ${this.scheduleOperationDate.value} ${this.scheduleOperationTime.value}`);
+      });
+    } else {
+      this.apiService.startMachine(id).subscribe(
+        (res: any) => {
+          alert('Success. Machine is starting, please wait.');
+        },
+        (error: HttpErrorResponse) => {
+          if(error.error.text) {
+            alert(error.error.text);
+          }else{
+            alert(error.error);
+          }
+        }
+      );
+    }
+  }
+  stopMachine(id: number) {
+    if (
+      this.scheduleOperationDate.value! &&
+      this.scheduleOperationTime.value!
+    ) {
+      const datetime = this.formatDateTimeToLong(
+        this.scheduleOperationDate.value,
+        this.scheduleOperationTime.value
+      );
+      this.apiService.scheduleMachineStop(id, datetime).subscribe(() => {
+        alert(`Success. Machine will stop at ${this.scheduleOperationDate.value} ${this.scheduleOperationTime.value}`);
+      });
+    } else {
+      this.apiService.stopMachine(id).subscribe(
+        (res: any) => {
+          alert('Success. Machine is stopping, please wait.');
+        },
+        (error: HttpErrorResponse) => {
+          if(error.error.text) {
+            alert(error.error.text);
+          }else{
+            alert(error.error);
+          }
+        }
+      );
+    }
+  }
+  restartMachine(id: number) {
+    if (
+      this.scheduleOperationDate.value! &&
+      this.scheduleOperationTime.value!
+    ) {
+      const datetime = this.formatDateTimeToLong(
+        this.scheduleOperationDate.value,
+        this.scheduleOperationTime.value
+      );
+      this.apiService.scheduleMachineRestart(id, datetime).subscribe(() => {
+        alert(`Success. Machine will restart at ${this.scheduleOperationDate.value} ${this.scheduleOperationTime.value}`);
+      });
+    } else {
+      this.apiService.restartMachine(id).subscribe(
+        (res: any) => {
+          alert('Success. Machine is restarting, please wait.');
+        },
+        (error: HttpErrorResponse) => {
+          if(error.error.text) {
+            alert(error.error.text);
+          }else{
+            alert(error.error);
+          }
+        }
+      );
+    }
+  }
+
   constructor(
     private apiService: ApiService,
     private myAuthService: MyAuthService
@@ -118,6 +220,15 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
     );
     this.authorisedToDelete = this.myAuthService.isAuthorised(
       Permission.CAN_DESTROY_MACHINES
+    );
+    this.authorisedToStart = this.myAuthService.isAuthorised(
+      Permission.CAN_START_MACHINES
+    );
+    this.authorisedToStop = this.myAuthService.isAuthorised(
+      Permission.CAN_STOP_MACHINES
+    );
+    this.authorisedToRestart = this.myAuthService.isAuthorised(
+      Permission.CAN_RESTART_MACHINES
     );
     this.sub = this.apiService.userMachines$.subscribe((machines) => {
       this.machines = machines;
@@ -131,8 +242,11 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private formatDateTimeToLong(date: string | null, time: string | null): number | null {
-    if(date && time) {
+  private formatDateTimeToLong(
+    date: string | null,
+    time: string | null
+  ): number | null {
+    if (date && time) {
       return new Date(`${date} ${time}`).getTime();
     }
     return null;
