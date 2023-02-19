@@ -27,6 +27,7 @@ export interface Machine {
   active: boolean;
   name: string;
   runningPeriods: MachineRunningPeriod[];
+  createdAt: Date;
 }
 
 export enum MachineStatus {

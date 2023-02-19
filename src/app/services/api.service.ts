@@ -118,12 +118,10 @@ export class ApiService implements OnDestroy {
       });
   }
 
-  createMachine(
-    name: string
-  ) {
+  createMachine(name: string) {
     return this.httpClient
       .post<any>(`${this.apiUrl}/api/machines/add`, {
-       name
+        name,
       })
       .subscribe((response) => {
         this._userMachines.next(response.machines);
@@ -134,18 +132,40 @@ export class ApiService implements OnDestroy {
   destroyMachine(machine: Machine) {
     return this.httpClient
       .post<any>(`${this.apiUrl}/api/machines/delete`, {
-       id: machine.id,
-       status: machine.status,
-       user: machine.user,
-       active: machine.active,
-       runningPeriods: machine.runningPeriods,
-       name: machine.name,
+        id: machine.id,
+        status: machine.status,
+        user: machine.user,
+        active: machine.active,
+        runningPeriods: machine.runningPeriods,
+        name: machine.name,
+        createdAt: machine.createdAt,
       })
-      .subscribe((response) =>{
+      .subscribe((response) => {
         let um = this._userMachines.getValue();
-        um = um.filter(m => m.id !== machine.id);
+        um = um.filter((m) => m.id !== machine.id);
         this._userMachines.next(um);
       });
+  }
+
+  searchMachinesByFilters(
+    name: string | null,
+    status: string | null,
+    runningDatetimeStarted: number | null,
+    runningDatetimeStopped: number | null,
+    createdDatetimeStarted: number | null,
+    createdDatetimeStopped: number | null,
+  ) {
+    return this.httpClient.post<any>(
+      `${this.apiUrl}/api/machines/search-by-filters`,
+      {
+        name: name,
+        status: status,
+        runningStarted: runningDatetimeStarted,
+        runningStopped: runningDatetimeStopped,
+        createdAtLowerBound: createdDatetimeStarted,
+        createdAtUpperBound: createdDatetimeStopped,
+      }
+    );
   }
 
   ngOnDestroy(): void {

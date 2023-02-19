@@ -16,14 +16,20 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
   machines: Machine[] = [];
   filteredMachines: Machine[] = [];
   private sub!: Subscription;
-  private authorisedToSearch: boolean = false;
+  authorisedToSearch: boolean = false;
   authorisedToDelete: boolean = false;
 
   searchFilters = new FormGroup({
     machineName: new FormControl(''),
     machineStatus: new FormControl(''),
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
+    startRunningDate: new FormControl(''),
+    stopRunningDate: new FormControl(''),
+    startRunningTime: new FormControl('00:00'),
+    stopRunningTime: new FormControl('00:00'),
+    startCreatedDate: new FormControl(''),
+    stopCreatedDate: new FormControl(''),
+    startCreatedTime: new FormControl('00:00'),
+    stopCreatedTime: new FormControl('00:00'),
   });
 
   get machineName() {
@@ -32,70 +38,87 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
   get machineStatus() {
     return this.searchFilters.get('machineStatus')!;
   }
-  get startDate() {
-    return this.searchFilters.get('startDate')!;
+  get startRunningDate() {
+    return this.searchFilters.get('startRunningDate')!;
   }
-  get endDate() {
-    return this.searchFilters.get('endDate')!;
+  get stopRunningDate() {
+    return this.searchFilters.get('stopRunningDate')!;
+  }
+  get startRunningTime() {
+    return this.searchFilters.get('startRunningTime')!;
+  }
+  get stopRunningTime() {
+    return this.searchFilters.get('stopRunningTime')!;
+  }
+  get startCreatedDate() {
+    return this.searchFilters.get('startCreatedDate')!;
+  }
+  get stopCreatedDate() {
+    return this.searchFilters.get('stopCreatedDate')!;
+  }
+  get startCreatedTime() {
+    return this.searchFilters.get('startCreatedTime')!;
+  }
+  get stopCreatedTime() {
+    return this.searchFilters.get('stopCreatedTime')!;
   }
 
   searchMachines() {
-    if(!this.authorisedToSearch) {
+    if (!this.authorisedToSearch) {
       alert('You have no permission to search machines.');
       return;
     }
-    this.filteredMachines = this.applyFilters(
-      this.machineName.value,
-      this.machineStatus.value,
-      this.startDate.value,
-      this.endDate.value
-    );
-  }
-  private applyFilters(
-    name: string | null,
-    status: string | null,
-    startDate: string | null,
-    endDate: string | null
-  ): Machine[] {
-    let res: Machine[] = this.machines;
-    if (name) {
-      res = res.filter((machine) =>
-        machine.name.toLocaleLowerCase().includes(name.toLocaleLowerCase())
-      );
+    let startRunningDateWithTimeAsLong: number | null = null;
+    let stopRunningDateWithTimeAsLong: number | null = null;
+
+    if(this.startRunningDate.value && this.stopRunningDate.value) {
+      startRunningDateWithTimeAsLong = this.formatDateTimeToLong(this.startRunningDate.value, this.startRunningTime.value);
+      stopRunningDateWithTimeAsLong = this.formatDateTimeToLong(this.stopRunningDate.value, this.stopRunningTime.value);
     }
-    if (status) {
-      res = res.filter((machine) => machine.status.toString() === status);
+
+    let startCreatedDateWithTimeAsLong: number | null = null;
+    let stopCreatedDateWithTimeAsLong: number | null = null;
+
+    if(this.startCreatedDate.value && this.stopCreatedDate.value) {
+      startCreatedDateWithTimeAsLong = this.formatDateTimeToLong(this.startCreatedDate.value, this.startCreatedTime.value);
+      stopCreatedDateWithTimeAsLong = this.formatDateTimeToLong(this.stopCreatedDate.value, this.stopCreatedTime.value);
     }
-    if (startDate && endDate) {
-      let dateFiltered: Machine[] = [];
-      const searchingDateStarted = new Date(startDate);
-      const searchingDateStopped = new Date(endDate);
-      for (let machine of res) {
-        for (let period of machine.runningPeriods) {
-          const machineDateStarted = new Date(period.dateStarted);
-          const machineDateStopped = new Date(period.dateStopped);
-          if (
-            machineDateStarted >= searchingDateStarted &&
-            machineDateStopped <= searchingDateStopped
-          ) {
-            dateFiltered.push(machine);
-            break;
-          }
-        }
-      }
-      res = dateFiltered;
-    }
-    return res;
+    
+    this.apiService
+      .searchMachinesByFilters(
+        this.machineName.value,
+        this.machineStatus.value,
+        startRunningDateWithTimeAsLong,
+        stopRunningDateWithTimeAsLong,
+        startCreatedDateWithTimeAsLong,
+        stopCreatedDateWithTimeAsLong
+      )
+      .subscribe((response) => {
+        this.filteredMachines = response.machines;
+      });
   }
 
   destroyMachine(machine: Machine) {
-    this.apiService.destroyMachine(machine);
+    if (
+      confirm(
+        'Are you sure you want to destroy this machine? You will not be able to undo this action.'
+      )
+    ) {
+      this.apiService.destroyMachine(machine);
+    }
   }
-  constructor(private apiService: ApiService, private myAuthService: MyAuthService) {}
+  constructor(
+    private apiService: ApiService,
+    private myAuthService: MyAuthService
+  ) {}
 
   ngOnInit(): void {
-    this.authorisedToSearch = this.myAuthService.isAuthorised(Permission.CAN_SEARCH_MACHINES);
-    this.authorisedToDelete = this.myAuthService.isAuthorised(Permission.CAN_DESTROY_MACHINES);
+    this.authorisedToSearch = this.myAuthService.isAuthorised(
+      Permission.CAN_SEARCH_MACHINES
+    );
+    this.authorisedToDelete = this.myAuthService.isAuthorised(
+      Permission.CAN_DESTROY_MACHINES
+    );
     this.sub = this.apiService.userMachines$.subscribe((machines) => {
       this.machines = machines;
       this.filteredMachines = machines;
@@ -106,5 +129,12 @@ export class SearchMachinesComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
+  }
+
+  private formatDateTimeToLong(date: string | null, time: string | null): number | null {
+    if(date && time) {
+      return new Date(`${date} ${time}`).getTime();
+    }
+    return null;
   }
 }
